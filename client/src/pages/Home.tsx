@@ -210,6 +210,9 @@ export default function Home() {
                 {item.label}
               </a>
             ))}
+            <Link to="/auth" className="text-indigo-400 hover:text-indigo-300 transition-colors">
+              Sign In
+            </Link>
           </nav>
           
           {/* Mobile Navigation Button */}
@@ -238,6 +241,13 @@ export default function Home() {
                 {item.label}
               </a>
             ))}
+            <Link 
+              to="/auth" 
+              className="block py-2 text-indigo-400 hover:text-indigo-300 transition-colors mt-2 border-t border-slate-800 pt-4"
+              onClick={closeMobileMenu}
+            >
+              Sign In
+            </Link>
           </div>
         </div>
       </header>
