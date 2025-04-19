@@ -150,7 +150,7 @@ function ContactForm() {
                       transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                       className="mr-2"
                     >
-                      <Loader2 className="h-4 w-4" />
+                      <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full inline-block" />
                     </motion.div>
                     Sending...
                   </>
