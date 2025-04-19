@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
+import Section from "@/components/Section";
 
 const navItems = [
   { id: "home", label: "Home" },
@@ -85,144 +86,134 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <section id="home" className="min-h-screen flex items-center justify-center px-6 py-24 sm:py-32">
-        <div className="max-w-5xl w-full text-slate-200">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center"
+      <Section id="home">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center"
+        >
+          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight mb-6">
+            Shaping the Future of <span className="text-indigo-400">Intelligence</span>
+          </h1>
+          <p className="max-w-2xl mx-auto text-lg text-slate-300 mb-10">
+            Unlocking tomorrow through discreet, groundbreaking research at the frontier of Artificial Intelligence.
+          </p>
+          <a
+            href="#about"
+            className="inline-block px-8 py-3 rounded-full bg-indigo-500 hover:bg-indigo-600 transition-colors shadow-lg shadow-indigo-500/30"
           >
-            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight mb-6">
-              Shaping the Future of <span className="text-indigo-400">Intelligence</span>
-            </h1>
-            <p className="max-w-2xl mx-auto text-lg text-slate-300 mb-10">
-              Unlocking tomorrow through discreet, groundbreaking research at the frontier of Artificial Intelligence.
-            </p>
-            <a
-              href="#about"
-              className="inline-block px-8 py-3 rounded-full bg-indigo-500 hover:bg-indigo-600 transition-colors shadow-lg shadow-indigo-500/30"
-            >
-              Discover Our Mission
-            </a>
-          </motion.div>
-        </div>
-      </section>
+            Discover Our Mission
+          </a>
+        </motion.div>
+      </Section>
 
       {/* About */}
-      <section id="about" className="min-h-screen flex items-center justify-center px-6 py-24 sm:py-32">
-        <div className="max-w-5xl w-full text-slate-200">
-          <motion.div 
-            initial={{ opacity: 0 }} 
-            whileInView={{ opacity: 1 }} 
-            viewport={{ once: true }} 
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl font-bold mb-4">About Us</h2>
-            <p className="text-slate-300 leading-relaxed">
-              At ΔI‑Lab, we are committed to excellence, innovation, and global impact. Our elite team of scientists and engineers push the boundaries of intelligent systems, exploring uncharted territories while upholding the highest standards of confidentiality. Guided by our core values of integrity, curiosity, and precision, we partner with select organizations to unlock the future of AI.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+      <Section id="about">
+        <motion.div 
+          initial={{ opacity: 0 }} 
+          whileInView={{ opacity: 1 }} 
+          viewport={{ once: true }} 
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="text-3xl font-bold mb-4">About Us</h2>
+          <p className="text-slate-300 leading-relaxed">
+            At ΔI‑Lab, we are committed to excellence, innovation, and global impact. Our elite team of scientists and engineers push the boundaries of intelligent systems, exploring uncharted territories while upholding the highest standards of confidentiality. Guided by our core values of integrity, curiosity, and precision, we partner with select organizations to unlock the future of AI.
+          </p>
+        </motion.div>
+      </Section>
 
       {/* Research */}
-      <section id="research" className="min-h-screen flex items-center justify-center px-6 py-24 sm:py-32">
-        <div className="max-w-5xl w-full text-slate-200">
-          <motion.div 
-            initial={{ x: -40, opacity: 0 }} 
-            whileInView={{ x: 0, opacity: 1 }} 
-            viewport={{ once: true }} 
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl font-bold mb-8">Research Areas</h2>
-            <div className="grid sm:grid-cols-2 gap-8">
-              {[
-                { title: "Machine Learning", desc: "From self‑supervised models to adaptive agents, we unlock scalable learning paradigms." },
-                { title: "Cognitive Systems", desc: "Investigating architectures that mirror—yet surpass—human reasoning and perception." },
-                { title: "Ethical AI", desc: "Embedding responsibility and alignment into systems operating at the edge of possibility." },
-                { title: "Restricted Research", desc: "Classified initiatives accelerating intelligence in unforeseen dimensions." }
-              ].map((area) => (
-                <div key={area.title} className="bg-slate-800/40 p-6 rounded-2xl shadow-inner shadow-black/20">
-                  <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
-                    {area.title === "Restricted Research" && <Lock size={16} className="text-indigo-400" />} {area.title}
-                  </h3>
-                  <p className="text-slate-400 text-sm leading-relaxed">{area.desc}</p>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      <Section id="research">
+        <motion.div 
+          initial={{ x: -40, opacity: 0 }} 
+          whileInView={{ x: 0, opacity: 1 }} 
+          viewport={{ once: true }} 
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="text-3xl font-bold mb-8">Research Areas</h2>
+          <div className="grid sm:grid-cols-2 gap-8">
+            {[
+              { title: "Machine Learning", desc: "From self‑supervised models to adaptive agents, we unlock scalable learning paradigms." },
+              { title: "Cognitive Systems", desc: "Investigating architectures that mirror—yet surpass—human reasoning and perception." },
+              { title: "Ethical AI", desc: "Embedding responsibility and alignment into systems operating at the edge of possibility." },
+              { title: "Restricted Research", desc: "Classified initiatives accelerating intelligence in unforeseen dimensions." }
+            ].map((area) => (
+              <div key={area.title} className="bg-slate-800/40 p-6 rounded-2xl shadow-inner shadow-black/20">
+                <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
+                  {area.title === "Restricted Research" && <Lock size={16} className="text-indigo-400" />} {area.title}
+                </h3>
+                <p className="text-slate-400 text-sm leading-relaxed">{area.desc}</p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </Section>
 
       {/* Careers */}
-      <section id="careers" className="min-h-screen flex items-center justify-center px-6 py-24 sm:py-32">
-        <div className="max-w-5xl w-full text-slate-200">
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
-            viewport={{ once: true }} 
-            transition={{ duration: 0.6 }}
+      <Section id="careers">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true }} 
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="text-3xl font-bold mb-4">Careers</h2>
+          <p className="text-slate-300 mb-6 max-w-3xl">
+            Join a team redefining what's possible. At ΔI‑Lab, you will collaborate with top talent on transformative projects that shift the paradigm of intelligence. We value curiosity, rigor, and the courage to venture beyond conventional limits.
+          </p>
+          <a
+            href="mailto:talent@deltailab.ai"
+            className="inline-block px-6 py-3 rounded-full border border-indigo-400 hover:bg-indigo-500 hover:text-white transition-colors"
           >
-            <h2 className="text-3xl font-bold mb-4">Careers</h2>
-            <p className="text-slate-300 mb-6 max-w-3xl">
-              Join a team redefining what's possible. At ΔI‑Lab, you will collaborate with top talent on transformative projects that shift the paradigm of intelligence. We value curiosity, rigor, and the courage to venture beyond conventional limits.
-            </p>
-            <a
-              href="mailto:talent@deltailab.ai"
-              className="inline-block px-6 py-3 rounded-full border border-indigo-400 hover:bg-indigo-500 hover:text-white transition-colors"
-            >
-              Express Interest
-            </a>
-          </motion.div>
-        </div>
-      </section>
+            Express Interest
+          </a>
+        </motion.div>
+      </Section>
 
       {/* Contact */}
-      <section id="contact" className="min-h-screen flex items-center justify-center px-6 py-24 sm:py-32">
-        <div className="max-w-5xl w-full text-slate-200">
-          <motion.div 
-            initial={{ scale: 0.9, opacity: 0 }} 
-            whileInView={{ scale: 1, opacity: 1 }} 
-            viewport={{ once: true }} 
-            transition={{ duration: 0.6 }}
+      <Section id="contact">
+        <motion.div 
+          initial={{ scale: 0.9, opacity: 0 }} 
+          whileInView={{ scale: 1, opacity: 1 }} 
+          viewport={{ once: true }} 
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="text-3xl font-bold mb-4">Contact</h2>
+          <form
+            action="#"
+            className="grid gap-4 max-w-xl"
+            onSubmit={(e) => {
+              e.preventDefault();
+              alert("Message received — we'll be in touch.");
+            }}
           >
-            <h2 className="text-3xl font-bold mb-4">Contact</h2>
-            <form
-              action="#"
-              className="grid gap-4 max-w-xl"
-              onSubmit={(e) => {
-                e.preventDefault();
-                alert("Message received — we'll be in touch.");
-              }}
+            <input
+              type="text"
+              placeholder="Name"
+              required
+              className="bg-slate-800/40 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              required
+              className="bg-slate-800/40 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <textarea
+              placeholder="Message"
+              rows={4}
+              className="bg-slate-800/40 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500"
+            ></textarea>
+            <button
+              type="submit"
+              className="px-6 py-3 rounded-full bg-indigo-500 hover:bg-indigo-600 transition-colors"
             >
-              <input
-                type="text"
-                placeholder="Name"
-                required
-                className="bg-slate-800/40 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                required
-                className="bg-slate-800/40 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              <textarea
-                placeholder="Message"
-                rows={4}
-                className="bg-slate-800/40 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500"
-              ></textarea>
-              <button
-                type="submit"
-                className="px-6 py-3 rounded-full bg-indigo-500 hover:bg-indigo-600 transition-colors"
-              >
-                Send Secure Message
-              </button>
-            </form>
-          </motion.div>
-        </div>
-      </section>
+              Send Secure Message
+            </button>
+          </form>
+        </motion.div>
+      </Section>
 
       {/* Footer */}
       <footer className="text-center text-xs text-slate-500 py-6 bg-black/20 backdrop-blur-sm">
