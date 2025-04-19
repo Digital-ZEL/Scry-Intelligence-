@@ -1,6 +1,11 @@
-import { useState } from "react";
+import { useState, ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, ArrowRight, Brain, Atom, Sparkles, Users, Award, Mail, MessageSquare } from "lucide-react";
+import { 
+  Lock, ArrowRight, Brain, Atom, Sparkles, 
+  Users, Award, Mail, MessageSquare, 
+  Clock, Book, ChevronRight, GraduationCap 
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -28,6 +33,7 @@ const navItems = [
   { id: "home", label: "Home" },
   { id: "about", label: "About" },
   { id: "research", label: "Research" },
+  { id: "courses", label: "Courses" },
   { id: "careers", label: "Careers" },
   { id: "contact", label: "Contact" }
 ];
@@ -40,6 +46,102 @@ const contactFormSchema = z.object({
 });
 
 type ContactFormValues = z.infer<typeof contactFormSchema>;
+
+interface CourseCardProps {
+  title: string;
+  description: string;
+  duration: string;
+  level: string;
+  icon: ReactNode;
+  delay: number;
+  inviteOnly: boolean;
+}
+
+function CourseCard({ title, description, duration, level, icon, delay, inviteOnly }: CourseCardProps) {
+  const { toast } = useToast();
+  
+  const handleCourseClick = () => {
+    if (inviteOnly) {
+      toast({
+        title: "Access requires clearance",
+        description: "This course is invitation-only.",
+        variant: "destructive",
+      });
+    }
+  };
+  
+  return (
+    <motion.div 
+      className="group relative bg-slate-800/40 backdrop-blur-lg border border-slate-700/50 rounded-2xl overflow-hidden shadow-xl hover:shadow-indigo-500/10 transition-all"
+      initial={{ y: 30, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay }}
+      whileHover={{ y: -5 }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 to-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div className="h-full w-full p-6 flex flex-col justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div>
+            <h4 className="text-xl font-semibold mb-3">{title}</h4>
+            <p className="text-slate-300 mb-4">{description}</p>
+            <div className="flex flex-wrap gap-3 mb-4">
+              <div className="flex items-center text-sm text-slate-300">
+                <Clock className="h-4 w-4 mr-2 text-indigo-400" />
+                {duration}
+              </div>
+              <div className="flex items-center text-sm text-slate-300">
+                <Book className="h-4 w-4 mr-2 text-indigo-400" />
+                {level}
+              </div>
+            </div>
+          </div>
+          <Button
+            className="w-full flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 mt-4"
+            onClick={handleCourseClick}
+          >
+            {inviteOnly ? (
+              <>
+                <Lock className="h-4 w-4 mr-2" /> Apply for Access
+              </>
+            ) : (
+              <>
+                Apply to Enroll <ChevronRight className="h-4 w-4 ml-1" />
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
+      
+      <div className="p-6">
+        <div className="mb-4">
+          {icon}
+        </div>
+        <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
+          {title}
+          {inviteOnly && (
+            <Badge variant="outline" className="bg-yellow-500/20 text-yellow-300 border-yellow-800 text-xs py-0 px-2 ml-2">
+              <Lock size={10} className="mr-1" /> Invite Only
+            </Badge>
+          )}
+        </h3>
+        <div className="flex flex-wrap gap-3 mb-4">
+          <div className="flex items-center text-sm text-slate-400">
+            <Clock className="h-4 w-4 mr-2 text-indigo-400" />
+            {duration}
+          </div>
+          <div className="flex items-center text-sm text-slate-400">
+            <Book className="h-4 w-4 mr-2 text-indigo-400" />
+            {level}
+          </div>
+        </div>
+        <div className="flex justify-between items-center mt-4">
+          <span className="text-sm text-slate-400">Hover for details</span>
+          <GraduationCap className="h-5 w-5 text-indigo-400" />
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 function ContactForm() {
   const { toast } = useToast();
@@ -486,6 +588,54 @@ export default function Home() {
               </a>
             </motion.div>
           ))}
+        </div>
+      </Section>
+
+      {/* Courses */}
+      <Section id="courses">
+        <motion.div 
+          initial={{ opacity: 0 }} 
+          whileInView={{ opacity: 1 }} 
+          viewport={{ once: true }} 
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-3xl font-bold mb-4">Elevate Your Craft</h2>
+          <p className="text-slate-300 max-w-2xl mx-auto">
+            Experience elite master classes led by our world-class research scientists. Gain deep insights into cutting-edge AI technologies and methodologies.
+          </p>
+        </motion.div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <CourseCard 
+            title="Generative Models 201"
+            description="Advanced techniques in generative AI, covering diffusion models, transformers, and optimization strategies."
+            duration="8 weeks"
+            level="Advanced"
+            icon={<Brain className="h-8 w-8 text-indigo-400" />}
+            delay={0.1}
+            inviteOnly={false}
+          />
+          
+          <CourseCard 
+            title="Quantum Computing for AI"
+            description="Explore the intersection of quantum computing and artificial intelligence with hands-on algorithm implementation."
+            duration="6 weeks"
+            level="Intermediate"
+            icon={<Atom className="h-8 w-8 text-indigo-400" />}
+            delay={0.2}
+            inviteOnly={true}
+          />
+          
+          <CourseCard 
+            title="AI Alignment Fundamentals"
+            description="Core principles and methodologies for ensuring AI systems remain aligned with human values and intentions."
+            duration="10 weeks"
+            level="Intermediate"
+            icon={<Users className="h-8 w-8 text-indigo-400" />}
+            delay={0.3}
+            inviteOnly={false}
+          />
         </div>
       </Section>
 
