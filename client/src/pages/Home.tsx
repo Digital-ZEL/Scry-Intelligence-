@@ -1,7 +1,28 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { Lock } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Lock, ArrowRight, Brain, Atom, Sparkles, Users, Award, Mail, MessageSquare } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
+import { Link, useLocation } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
 import Section from "@/components/Section";
+import { 
+  Form, 
+  FormControl, 
+  FormField, 
+  FormItem, 
+  FormLabel, 
+  FormMessage 
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const navItems = [
   { id: "home", label: "Home" },
@@ -10,6 +31,142 @@ const navItems = [
   { id: "careers", label: "Careers" },
   { id: "contact", label: "Contact" }
 ];
+
+// Contact form schema
+const contactFormSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  message: z.string().min(10, "Message must be at least 10 characters")
+});
+
+type ContactFormValues = z.infer<typeof contactFormSchema>;
+
+function ContactForm() {
+  const { toast } = useToast();
+  const form = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      message: ""
+    }
+  });
+  
+  const contactMutation = useMutation({
+    mutationFn: async (data: ContactFormValues) => {
+      const res = await apiRequest("POST", "/api/contact", data);
+      return await res.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Message sent",
+        description: "Thank you for your message. We'll be in touch soon.",
+      });
+      form.reset();
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error sending message",
+        description: error.message || "Please try again later",
+        variant: "destructive",
+      });
+    },
+  });
+  
+  const onSubmit = (data: ContactFormValues) => {
+    contactMutation.mutate(data);
+  };
+
+  return (
+    <Card className="border border-slate-800 bg-slate-900/50 backdrop-blur-sm shadow-xl">
+      <CardContent className="pt-6">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="Your name" 
+                      {...field} 
+                      className="bg-slate-800/50 border-slate-700 focus-visible:ring-indigo-500"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="your.email@example.com" 
+                      type="email" 
+                      {...field} 
+                      className="bg-slate-800/50 border-slate-700 focus-visible:ring-indigo-500"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="message"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Message</FormLabel>
+                  <FormControl>
+                    <Textarea 
+                      placeholder="Your message" 
+                      className="min-h-32 bg-slate-800/50 border-slate-700 focus-visible:ring-indigo-500" 
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <div className="pt-2">
+              <Button 
+                type="submit" 
+                className="w-full bg-indigo-600 hover:bg-indigo-700"
+                disabled={contactMutation.isPending}
+              >
+                {contactMutation.isPending ? (
+                  <>
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      className="mr-2"
+                    >
+                      <Loader2 className="h-4 w-4" />
+                    </motion.div>
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    Send Message <MessageSquare className="ml-2 h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function Home() {
   const [secretClicks, setSecretClicks] = useState(0);
@@ -110,65 +267,381 @@ export default function Home() {
 
       {/* About */}
       <Section id="about">
-        <motion.div 
-          initial={{ opacity: 0 }} 
-          whileInView={{ opacity: 1 }} 
-          viewport={{ once: true }} 
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-3xl font-bold mb-4">About Us</h2>
-          <p className="text-slate-300 leading-relaxed">
-            At ΔI‑Lab, we are committed to excellence, innovation, and global impact. Our elite team of scientists and engineers push the boundaries of intelligent systems, exploring uncharted territories while upholding the highest standards of confidentiality. Guided by our core values of integrity, curiosity, and precision, we partner with select organizations to unlock the future of AI.
-          </p>
-        </motion.div>
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <motion.div 
+            initial={{ opacity: 0, x: -40 }} 
+            whileInView={{ opacity: 1, x: 0 }} 
+            viewport={{ once: true }} 
+            transition={{ duration: 0.6 }}
+            className="order-2 md:order-1"
+          >
+            <h2 className="text-3xl font-bold mb-6">About Us</h2>
+            <p className="text-slate-300 leading-relaxed mb-4">
+              At ΔI‑Lab, we are committed to excellence, innovation, and global impact. Our elite team of scientists and engineers push the boundaries of intelligent systems, exploring uncharted territories while upholding the highest standards of confidentiality.
+            </p>
+            <p className="text-slate-300 leading-relaxed mb-6">
+              Guided by our core values of integrity, curiosity, and precision, we partner with select organizations to unlock the future of AI.
+            </p>
+            
+            <div className="grid grid-cols-2 gap-4 mt-8">
+              <div className="flex items-start space-x-2">
+                <Brain className="h-6 w-6 text-indigo-400 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-medium">Scientific Excellence</h3>
+                  <p className="text-sm text-slate-400">Pioneering research at the forefront of AI</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start space-x-2">
+                <Users className="h-6 w-6 text-indigo-400 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-medium">Elite Team</h3>
+                  <p className="text-sm text-slate-400">World-class scientists and engineers</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start space-x-2">
+                <Award className="h-6 w-6 text-indigo-400 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-medium">Global Impact</h3>
+                  <p className="text-sm text-slate-400">Solutions that transform industries</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start space-x-2">
+                <Sparkles className="h-6 w-6 text-indigo-400 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-medium">Innovation</h3>
+                  <p className="text-sm text-slate-400">Breaking new ground in AI capabilities</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="order-1 md:order-2"
+          >
+            <div className="relative">
+              <div className="absolute inset-0 bg-indigo-500/20 blur-3xl rounded-full"></div>
+              <div className="relative bg-slate-900/70 backdrop-blur-sm p-8 rounded-2xl border border-slate-700 shadow-xl">
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="font-semibold text-xl">ΔI‑Lab at a glance</h3>
+                  <Atom className="h-6 w-6 text-indigo-400" />
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span>Founded</span>
+                      <span className="text-indigo-400">2022</span>
+                    </div>
+                    <div className="h-1 bg-slate-800 rounded-full">
+                      <motion.div 
+                        className="h-full bg-indigo-500 rounded-full" 
+                        initial={{ width: 0 }}
+                        whileInView={{ width: "100%" }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1, delay: 0.5 }}
+                      ></motion.div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span>Research Scientists</span>
+                      <span className="text-indigo-400">42+</span>
+                    </div>
+                    <div className="h-1 bg-slate-800 rounded-full">
+                      <motion.div 
+                        className="h-full bg-indigo-500 rounded-full" 
+                        initial={{ width: 0 }}
+                        whileInView={{ width: "80%" }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1, delay: 0.7 }}
+                      ></motion.div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span>Research Papers</span>
+                      <span className="text-indigo-400">137</span>
+                    </div>
+                    <div className="h-1 bg-slate-800 rounded-full">
+                      <motion.div 
+                        className="h-full bg-indigo-500 rounded-full" 
+                        initial={{ width: 0 }}
+                        whileInView={{ width: "65%" }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1, delay: 0.9 }}
+                      ></motion.div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span>Partner Organizations</span>
+                      <span className="text-indigo-400">12</span>
+                    </div>
+                    <div className="h-1 bg-slate-800 rounded-full">
+                      <motion.div 
+                        className="h-full bg-indigo-500 rounded-full" 
+                        initial={{ width: 0 }}
+                        whileInView={{ width: "40%" }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1, delay: 1.1 }}
+                      ></motion.div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
       </Section>
 
       {/* Research */}
       <Section id="research">
         <motion.div 
-          initial={{ x: -40, opacity: 0 }} 
-          whileInView={{ x: 0, opacity: 1 }} 
+          initial={{ opacity: 0 }} 
+          whileInView={{ opacity: 1 }} 
           viewport={{ once: true }} 
           transition={{ duration: 0.6 }}
+          className="text-center mb-12"
         >
-          <h2 className="text-3xl font-bold mb-8">Research Areas</h2>
-          <div className="grid sm:grid-cols-2 gap-8">
-            {[
-              { title: "Machine Learning", desc: "From self‑supervised models to adaptive agents, we unlock scalable learning paradigms." },
-              { title: "Cognitive Systems", desc: "Investigating architectures that mirror—yet surpass—human reasoning and perception." },
-              { title: "Ethical AI", desc: "Embedding responsibility and alignment into systems operating at the edge of possibility." },
-              { title: "Restricted Research", desc: "Classified initiatives accelerating intelligence in unforeseen dimensions." }
-            ].map((area) => (
-              <div key={area.title} className="bg-slate-800/40 p-6 rounded-2xl shadow-inner shadow-black/20">
-                <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
-                  {area.title === "Restricted Research" && <Lock size={16} className="text-indigo-400" />} {area.title}
-                </h3>
-                <p className="text-slate-400 text-sm leading-relaxed">{area.desc}</p>
-              </div>
-            ))}
-          </div>
+          <h2 className="text-3xl font-bold mb-4">Research Areas</h2>
+          <p className="text-slate-300 max-w-2xl mx-auto">
+            Our groundbreaking work spans multiple domains of artificial intelligence, from foundation models to specialized applications.
+          </p>
         </motion.div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { 
+              title: "Machine Learning", 
+              desc: "From self‑supervised models to adaptive agents, we unlock scalable learning paradigms.",
+              icon: <Brain className="h-8 w-8 text-indigo-400" />,
+              delay: 0.1
+            },
+            { 
+              title: "Cognitive Systems", 
+              desc: "Investigating architectures that mirror—yet surpass—human reasoning and perception.",
+              icon: <Sparkles className="h-8 w-8 text-indigo-400" />,
+              delay: 0.2
+            },
+            { 
+              title: "Ethical AI", 
+              desc: "Embedding responsibility and alignment into systems operating at the edge of possibility.",
+              icon: <Users className="h-8 w-8 text-indigo-400" />,
+              delay: 0.3
+            },
+            { 
+              title: "Restricted Research", 
+              desc: "Classified initiatives accelerating intelligence in unforeseen dimensions.",
+              icon: <Lock className="h-8 w-8 text-indigo-400" />,
+              delay: 0.4,
+              restricted: true
+            }
+          ].map((area) => (
+            <motion.div 
+              key={area.title} 
+              className="bg-slate-800/30 border border-slate-700/50 p-6 rounded-2xl shadow-lg hover:shadow-indigo-500/10 hover:border-indigo-500/30 transition-all"
+              initial={{ y: 30, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: area.delay }}
+              whileHover={{ y: -5 }}
+            >
+              <div className="mb-4">
+                {area.icon}
+              </div>
+              <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                {area.title}
+                {area.restricted && (
+                  <span className="bg-yellow-500/20 text-yellow-300 text-xs py-0.5 px-2 rounded-full inline-flex items-center">
+                    <Lock size={10} className="mr-1" /> Restricted
+                  </span>
+                )}
+              </h3>
+              <p className="text-slate-400 leading-relaxed">{area.desc}</p>
+              <a 
+                href="#" 
+                className="mt-4 inline-flex items-center text-indigo-400 hover:text-indigo-300 text-sm font-medium"
+              >
+                Learn more <ArrowRight className="ml-1 h-3 w-3" />
+              </a>
+            </motion.div>
+          ))}
+        </div>
       </Section>
 
       {/* Careers */}
       <Section id="careers">
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }} 
-          whileInView={{ opacity: 1, y: 0 }} 
-          viewport={{ once: true }} 
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-3xl font-bold mb-4">Careers</h2>
-          <p className="text-slate-300 mb-6 max-w-3xl">
-            Join a team redefining what's possible. At ΔI‑Lab, you will collaborate with top talent on transformative projects that shift the paradigm of intelligence. We value curiosity, rigor, and the courage to venture beyond conventional limits.
-          </p>
-          <a
-            href="mailto:talent@deltailab.ai"
-            className="inline-block px-6 py-3 rounded-full border border-indigo-400 hover:bg-indigo-500 hover:text-white transition-colors"
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            viewport={{ once: true }} 
+            transition={{ duration: 0.6 }}
           >
-            Express Interest
-          </a>
-        </motion.div>
+            <h2 className="text-3xl font-bold mb-4">Join Our Team</h2>
+            <p className="text-slate-300 mb-6">
+              At ΔI‑Lab, you'll collaborate with top talent on transformative projects that shift the paradigm of intelligence. We value curiosity, rigor, and the courage to venture beyond conventional limits.
+            </p>
+            
+            <div className="mb-8 space-y-4">
+              <div className="flex items-start gap-3 p-4 rounded-lg bg-slate-800/30 border border-slate-700/50">
+                <div className="min-w-12 min-h-12 rounded-full bg-indigo-500/20 flex items-center justify-center">
+                  <Brain className="h-6 w-6 text-indigo-400" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg">Research Scientists</h3>
+                  <p className="text-slate-400 text-sm mt-1">
+                    Push the boundaries of AI with access to cutting-edge compute resources and a team of brilliant peers.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3 p-4 rounded-lg bg-slate-800/30 border border-slate-700/50">
+                <div className="min-w-12 min-h-12 rounded-full bg-indigo-500/20 flex items-center justify-center">
+                  <Atom className="h-6 w-6 text-indigo-400" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg">ML Engineers</h3>
+                  <p className="text-slate-400 text-sm mt-1">
+                    Build systems that scale our research from theory to production-ready applications.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3 p-4 rounded-lg bg-slate-800/30 border border-slate-700/50">
+                <div className="min-w-12 min-h-12 rounded-full bg-indigo-500/20 flex items-center justify-center">
+                  <Sparkles className="h-6 w-6 text-indigo-400" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg">Research Engineers</h3>
+                  <p className="text-slate-400 text-sm mt-1">
+                    Bridge the gap between theoretical breakthroughs and practical implementations.
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex gap-4">
+              <a
+                href="mailto:talent@deltailab.ai"
+                className="px-6 py-3 rounded-full bg-indigo-600 hover:bg-indigo-700 transition-colors"
+              >
+                Apply Now
+              </a>
+              <a
+                href="#contact"
+                className="px-6 py-3 rounded-full border border-indigo-400 hover:bg-indigo-500 hover:text-white transition-colors"
+              >
+                Ask a Question
+              </a>
+            </div>
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0, x: 40 }} 
+            whileInView={{ opacity: 1, x: 0 }} 
+            viewport={{ once: true }} 
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="relative"
+          >
+            <div className="absolute -inset-4 bg-indigo-500/10 blur-3xl rounded-full"></div>
+            <div className="relative bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl overflow-hidden border border-slate-700 shadow-xl">
+              <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:20px_20px]"></div>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-4 flex items-center">
+                  <span className="bg-indigo-500/20 p-1.5 rounded-md mr-2">
+                    <Users className="h-5 w-5 text-indigo-400" />
+                  </span>
+                  Why join ΔI‑Lab?
+                </h3>
+
+                <ul className="space-y-3 mt-6">
+                  <motion.li 
+                    className="flex items-start gap-2"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3, delay: 0.3 }}
+                  >
+                    <div className="h-6 w-6 rounded-full bg-indigo-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-indigo-400 text-xs">✓</span>
+                    </div>
+                    <div>
+                      <span className="font-medium">Meaningful Impact</span>
+                      <p className="text-slate-400 text-sm mt-1">
+                        Work on AI systems that solve real-world problems
+                      </p>
+                    </div>
+                  </motion.li>
+                  
+                  <motion.li 
+                    className="flex items-start gap-2"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3, delay: 0.4 }}
+                  >
+                    <div className="h-6 w-6 rounded-full bg-indigo-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-indigo-400 text-xs">✓</span>
+                    </div>
+                    <div>
+                      <span className="font-medium">Cutting-edge Resources</span>
+                      <p className="text-slate-400 text-sm mt-1">
+                        Access to high-performance computing and large-scale datasets
+                      </p>
+                    </div>
+                  </motion.li>
+                  
+                  <motion.li 
+                    className="flex items-start gap-2"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3, delay: 0.5 }}
+                  >
+                    <div className="h-6 w-6 rounded-full bg-indigo-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-indigo-400 text-xs">✓</span>
+                    </div>
+                    <div>
+                      <span className="font-medium">Collaborative Culture</span>
+                      <p className="text-slate-400 text-sm mt-1">
+                        Work alongside world-class researchers and engineers
+                      </p>
+                    </div>
+                  </motion.li>
+                  
+                  <motion.li 
+                    className="flex items-start gap-2"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3, delay: 0.6 }}
+                  >
+                    <div className="h-6 w-6 rounded-full bg-indigo-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-indigo-400 text-xs">✓</span>
+                    </div>
+                    <div>
+                      <span className="font-medium">Flexible Work Environment</span>
+                      <p className="text-slate-400 text-sm mt-1">
+                        Remote-friendly with modern facilities for in-person collaboration
+                      </p>
+                    </div>
+                  </motion.li>
+                </ul>
+              </div>
+            </div>
+          </motion.div>
+        </div>
       </Section>
 
       {/* Contact */}
@@ -178,46 +651,71 @@ export default function Home() {
           whileInView={{ scale: 1, opacity: 1 }} 
           viewport={{ once: true }} 
           transition={{ duration: 0.6 }}
+          className="max-w-3xl mx-auto"
         >
-          <h2 className="text-3xl font-bold mb-4">Contact</h2>
-          <form
-            action="#"
-            className="grid gap-4 max-w-xl"
-            onSubmit={(e) => {
-              e.preventDefault();
-              alert("Message received — we'll be in touch.");
-            }}
-          >
-            <input
-              type="text"
-              placeholder="Name"
-              required
-              className="bg-slate-800/40 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              required
-              className="bg-slate-800/40 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            <textarea
-              placeholder="Message"
-              rows={4}
-              className="bg-slate-800/40 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500"
-            ></textarea>
-            <button
-              type="submit"
-              className="px-6 py-3 rounded-full bg-indigo-500 hover:bg-indigo-600 transition-colors"
-            >
-              Send Secure Message
-            </button>
-          </form>
+          <h2 className="text-3xl font-bold mb-4 text-center">Get In Touch</h2>
+          <p className="text-slate-300 mb-8 text-center">
+            Have questions about our research or potential collaborations? We'd love to hear from you.
+          </p>
+          <ContactForm />
         </motion.div>
       </Section>
 
       {/* Footer */}
-      <footer className="text-center text-xs text-slate-500 py-6 bg-black/20 backdrop-blur-sm">
-        © {new Date().getFullYear()} ΔI‑Lab. All rights reserved.
+      <footer className="py-10 bg-black/30 backdrop-blur-sm border-t border-slate-800 mt-16">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+            <div>
+              <h4 className="font-semibold mb-4 text-white">About</h4>
+              <ul className="space-y-2">
+                <li><a href="#about" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Our Mission</a></li>
+                <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Team</a></li>
+                <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Partners</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4 text-white">Research</h4>
+              <ul className="space-y-2">
+                <li><a href="#research" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Areas</a></li>
+                <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Publications</a></li>
+                <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Open Source</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4 text-white">Careers</h4>
+              <ul className="space-y-2">
+                <li><a href="#careers" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Open Positions</a></li>
+                <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Benefits</a></li>
+                <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Life at ΔI‑Lab</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4 text-white">Connect</h4>
+              <ul className="space-y-2">
+                <li><a href="#contact" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Contact Us</a></li>
+                <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Newsletter</a></li>
+                <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Events</a></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-slate-800">
+            <div className="text-sm text-slate-500 mb-4 md:mb-0">
+              © {new Date().getFullYear()} ΔI‑Lab. All rights reserved.
+            </div>
+            <div className="flex gap-6">
+              <Link to="/admin" className="text-sm text-slate-500 hover:text-indigo-400 transition-colors">
+                Admin
+              </Link>
+              <a href="#" className="text-sm text-slate-500 hover:text-indigo-400 transition-colors">
+                Privacy
+              </a>
+              <a href="#" className="text-sm text-slate-500 hover:text-indigo-400 transition-colors">
+                Terms
+              </a>
+            </div>
+          </div>
+        </div>
       </footer>
 
       {/* Easter Egg Overlay */}
