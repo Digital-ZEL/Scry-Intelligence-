@@ -298,7 +298,7 @@ export default function Home() {
       <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/30 border-b border-slate-800">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
           <button onClick={handleLogoClick} aria-label="AI Lab logo" className="text-xl font-semibold tracking-wider">
-            <span className="text-indigo-400">ΔI</span>‑Lab
+            <span className="text-indigo-400">Scry</span> Intelligence
           </button>
           
           {/* Desktop Navigation */}
@@ -389,7 +389,7 @@ export default function Home() {
           >
             <h2 className="text-3xl font-bold mb-6">About Us</h2>
             <p className="text-slate-300 leading-relaxed mb-4">
-              At ΔI‑Lab, we are committed to excellence, innovation, and global impact. Our elite team of scientists and engineers push the boundaries of intelligent systems, exploring uncharted territories while upholding the highest standards of confidentiality.
+              At Scry Intelligence, we are committed to excellence, innovation, and global impact. Our elite team of scientists and engineers push the boundaries of intelligent systems, exploring uncharted territories while upholding the highest standards of confidentiality.
             </p>
             <p className="text-slate-300 leading-relaxed mb-6">
               Guided by our core values of integrity, curiosity, and precision, we partner with select organizations to unlock the future of AI.
@@ -441,7 +441,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-indigo-500/20 blur-3xl rounded-full"></div>
               <div className="relative bg-slate-900/70 backdrop-blur-sm p-8 rounded-2xl border border-slate-700 shadow-xl">
                 <div className="flex justify-between items-center mb-6">
-                  <h3 className="font-semibold text-xl">ΔI‑Lab at a glance</h3>
+                  <h3 className="font-semibold text-xl">Scry Intelligence at a glance</h3>
                   <Atom className="h-6 w-6 text-indigo-400" />
                 </div>
                 
@@ -650,7 +650,7 @@ export default function Home() {
           >
             <h2 className="text-3xl font-bold mb-4">Join Our Team</h2>
             <p className="text-slate-300 mb-6">
-              At ΔI‑Lab, you'll collaborate with top talent on transformative projects that shift the paradigm of intelligence. We value curiosity, rigor, and the courage to venture beyond conventional limits.
+              At Scry Intelligence, you'll collaborate with top talent on transformative projects that shift the paradigm of intelligence. We value curiosity, rigor, and the courage to venture beyond conventional limits.
             </p>
             
             <div className="mb-8 space-y-4">
@@ -693,7 +693,7 @@ export default function Home() {
             
             <div className="flex gap-4">
               <a
-                href="mailto:talent@deltailab.ai"
+                href="mailto:talent@scryintelligence.com"
                 className="px-6 py-3 rounded-full bg-indigo-600 hover:bg-indigo-700 transition-colors"
               >
                 Apply Now
@@ -722,7 +722,7 @@ export default function Home() {
                   <span className="bg-indigo-500/20 p-1.5 rounded-md mr-2">
                     <Users className="h-5 w-5 text-indigo-400" />
                   </span>
-                  Why join ΔI‑Lab?
+                  Why join Scry Intelligence?
                 </h3>
 
                 <ul className="space-y-3 mt-6">
@@ -846,7 +846,7 @@ export default function Home() {
               <ul className="space-y-2">
                 <li><a href="#careers" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Open Positions</a></li>
                 <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Benefits</a></li>
-                <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Life at ΔI‑Lab</a></li>
+                <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Life at Scry Intelligence</a></li>
               </ul>
             </div>
             <div>
@@ -861,7 +861,7 @@ export default function Home() {
           
           <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-slate-800">
             <div className="text-sm text-slate-500 mb-4 md:mb-0">
-              © {new Date().getFullYear()} ΔI‑Lab. All rights reserved.
+              © {new Date().getFullYear()} Scry Intelligence. All rights reserved.
             </div>
             <div className="flex gap-6">
               <Link to="/admin" className="text-sm text-slate-500 hover:text-indigo-400 transition-colors">
