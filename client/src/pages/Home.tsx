@@ -363,10 +363,10 @@ export default function Home() {
           className="text-center"
         >
           <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight mb-6">
-            Shaping the Future of <span className="text-indigo-400">Intelligence</span>
+            Revealing the <span className="text-indigo-400">Hidden Intelligence</span>
           </h1>
           <p className="max-w-2xl mx-auto text-lg text-slate-300 mb-10">
-            Unlocking tomorrow through discreet, groundbreaking research at the frontier of Artificial Intelligence.
+            Peering beyond the veil of the known, we uncover the future through our mystic lens of advanced Artificial Intelligence.
           </p>
           <a
             href="#about"
@@ -389,10 +389,10 @@ export default function Home() {
           >
             <h2 className="text-3xl font-bold mb-6">About Us</h2>
             <p className="text-slate-300 leading-relaxed mb-4">
-              At Scry Intelligence, we are committed to excellence, innovation, and global impact. Our elite team of scientists and engineers push the boundaries of intelligent systems, exploring uncharted territories while upholding the highest standards of confidentiality.
+              At Scry Intelligence, we see what others cannot. Like mystical scryers gazing into their crystal spheres, our elite team of scientists and engineers peer beyond the veil of conventional AI, revealing hidden patterns and insights that remain invisible to others, all while maintaining the highest standards of confidentiality.
             </p>
             <p className="text-slate-300 leading-relaxed mb-6">
-              Guided by our core values of integrity, curiosity, and precision, we partner with select organizations to unlock the future of AI.
+              Guided by our core values of foresight, curiosity, and precision, we illuminate paths invisible to others. Like ancient oracles deciphering cosmic patterns, we partner with select organizations to divine the hidden potential of AI.
             </p>
             
             <div className="grid grid-cols-2 gap-4 mt-8">
@@ -527,7 +527,7 @@ export default function Home() {
         >
           <h2 className="text-3xl font-bold mb-4">Research Areas</h2>
           <p className="text-slate-300 max-w-2xl mx-auto">
-            Our groundbreaking work spans multiple domains of artificial intelligence, from foundation models to specialized applications.
+            Our mystical vision penetrates the depths of artificial intelligence, uncovering hidden connections between seemingly disparate domains. Like seers of the digital age, we divine insights from the data void.
           </p>
         </motion.div>
 
@@ -602,7 +602,7 @@ export default function Home() {
         >
           <h2 className="text-3xl font-bold mb-4">Elevate Your Craft</h2>
           <p className="text-slate-300 max-w-2xl mx-auto">
-            Experience elite master classes led by our world-class research scientists. Gain deep insights into cutting-edge AI technologies and methodologies.
+            Unveil the arcane knowledge of AI through our elite master classes. Like initiates in a secret order, you'll be guided by our visionary scryers to see beyond the ordinary and perceive the obscured truths of advanced intelligence.
           </p>
         </motion.div>
 
@@ -650,7 +650,7 @@ export default function Home() {
           >
             <h2 className="text-3xl font-bold mb-4">Join Our Team</h2>
             <p className="text-slate-300 mb-6">
-              At Scry Intelligence, you'll collaborate with top talent on transformative projects that shift the paradigm of intelligence. We value curiosity, rigor, and the courage to venture beyond conventional limits.
+              Join our circle of visionaries who can perceive what lies beyond the ordinary. At Scry Intelligence, we seek those with the rare gift to divine hidden patterns and forge new paths through the mists of uncertainty. We value the courage to gaze into the unknown and the wisdom to interpret what others cannot see.
             </p>
             
             <div className="mb-8 space-y-4">
@@ -815,7 +815,7 @@ export default function Home() {
         >
           <h2 className="text-3xl font-bold mb-4 text-center">Get In Touch</h2>
           <p className="text-slate-300 mb-8 text-center">
-            Have questions about our research or potential collaborations? We'd love to hear from you.
+            Reach beyond the veil and establish a connection with our mystic circle. Share your questions about our divinations or propose a joining of oracles.
           </p>
           <ContactForm />
         </motion.div>
