@@ -389,7 +389,7 @@ export default function Home() {
           >
             <h2 className="text-3xl font-bold mb-6">About Us</h2>
             <p className="text-slate-300 leading-relaxed mb-4">
-              At Scry Intelligence, we see what others cannot. Like mystical scryers gazing into their crystal spheres, our elite team of scientists and engineers peer beyond the veil of conventional AI, revealing hidden patterns and insights that remain invisible to others, all while maintaining the highest standards of confidentiality.
+              At Scry Intelligence, we see what others cannot. Like mystical scryers gazing into their crystal spheres, our elite team of scientists and engineers, led by founding engineer <span className="text-indigo-400 font-medium">Denzel Thomas</span>, peer beyond the veil of conventional AI, revealing hidden patterns and insights that remain invisible to others, all while maintaining the highest standards of confidentiality.
             </p>
             <p className="text-slate-300 leading-relaxed mb-4">
               Guided by our core values of foresight, curiosity, and precision, we illuminate paths invisible to others. Like ancient oracles deciphering cosmic patterns, we partner with select organizations to divine the hidden potential of AI.
