@@ -391,8 +391,11 @@ export default function Home() {
             <p className="text-slate-300 leading-relaxed mb-4">
               At Scry Intelligence, we see what others cannot. Like mystical scryers gazing into their crystal spheres, our elite team of scientists and engineers peer beyond the veil of conventional AI, revealing hidden patterns and insights that remain invisible to others, all while maintaining the highest standards of confidentiality.
             </p>
-            <p className="text-slate-300 leading-relaxed mb-6">
+            <p className="text-slate-300 leading-relaxed mb-4">
               Guided by our core values of foresight, curiosity, and precision, we illuminate paths invisible to others. Like ancient oracles deciphering cosmic patterns, we partner with select organizations to divine the hidden potential of AI.
+            </p>
+            <p className="text-slate-300 leading-relaxed mb-6">
+              Founded in 2025 by visionary <span className="text-indigo-400 font-medium">Denzel Thomas</span>, Scry Intelligence emerged from a profound understanding that true intelligence lies not in what we see, but in what we perceive beyond the surface.
             </p>
             
             <div className="grid grid-cols-2 gap-4 mt-8">
@@ -423,8 +426,8 @@ export default function Home() {
               <div className="flex items-start space-x-2">
                 <Sparkles className="h-6 w-6 text-indigo-400 flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="font-medium">Innovation</h3>
-                  <p className="text-sm text-slate-400">Breaking new ground in AI capabilities</p>
+                  <h3 className="font-medium">Visionary Leadership</h3>
+                  <p className="text-sm text-slate-400">Founded by Denzel Thomas in 2025</p>
                 </div>
               </div>
             </div>
@@ -449,7 +452,7 @@ export default function Home() {
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span>Founded</span>
-                      <span className="text-indigo-400">2022</span>
+                      <span className="text-indigo-400">2025</span>
                     </div>
                     <div className="h-1 bg-slate-800 rounded-full">
                       <motion.div 
