@@ -2,7 +2,7 @@ import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
-import { insertMessageSchema } from "@shared/schema";
+import { insertMessageSchema, insertResearchAreaSchema } from "@shared/schema";
 import { ZodError } from "zod";
 
 // Middleware to check if user is authenticated
@@ -80,9 +80,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create research area
   app.post("/api/admin/research-areas", isAdmin, async (req, res, next) => {
     try {
-      const area = await storage.createResearchArea(req.body);
+      const areaData = insertResearchAreaSchema.parse(req.body);
+      const area = await storage.createResearchArea(areaData);
       res.status(201).json(area);
     } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ 
+          error: "Validation error", 
+          details: error.errors 
+        });
+      }
       next(error);
     }
   });

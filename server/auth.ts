@@ -5,7 +5,8 @@ import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
-import { User as SelectUser } from "@shared/schema";
+import { User as SelectUser, insertUserSchema } from "@shared/schema";
+import { ZodError } from "zod";
 
 declare global {
   namespace Express {
@@ -29,8 +30,13 @@ async function comparePasswords(supplied: string, stored: string) {
 }
 
 export function setupAuth(app: Express) {
+  const secret = process.env.SESSION_SECRET;
+  if (!secret && process.env.NODE_ENV === "production") {
+    throw new Error("SESSION_SECRET environment variable is required in production");
+  }
+
   const sessionSettings: session.SessionOptions = {
-    secret: process.env.SESSION_SECRET || "ai-lab-secret-key",
+    secret: secret || "ai-lab-secret-key",
     resave: false,
     saveUninitialized: false,
     store: storage.sessionStore,
@@ -77,9 +83,12 @@ export function setupAuth(app: Express) {
         return res.status(400).json({ error: "Username already exists" });
       }
 
+      // Validate input and strip unauthorized fields (like role)
+      const userData = insertUserSchema.parse(req.body);
+
       const user = await storage.createUser({
-        ...req.body,
-        password: await hashPassword(req.body.password),
+        ...userData,
+        password: await hashPassword(userData.password),
       });
 
       req.login(user, (err) => {
@@ -88,6 +97,12 @@ export function setupAuth(app: Express) {
         res.status(201).json(userWithoutPassword);
       });
     } catch (err) {
+      if (err instanceof ZodError) {
+        return res.status(400).json({ 
+          error: "Validation error", 
+          details: err.errors 
+        });
+      }
       next(err);
     }
   });
