@@ -5,6 +5,8 @@ import { setupAuth } from "./auth";
 import { insertMessageSchema, insertResearchAreaSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { pool } from "./db";
+import { csrfProtection, csrfTokenEndpoint } from "./middleware/csrf";
+import { contactLimiter } from "./middleware/rate-limit";
 
 // Middleware to check if user is authenticated
 const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
@@ -25,6 +27,12 @@ const isAdmin = (req: Request, res: Response, next: NextFunction) => {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
   setupAuth(app);
+
+  // CSRF token endpoint - client should call this to get a token
+  app.get("/api/csrf-token", csrfTokenEndpoint);
+
+  // Apply CSRF protection to all state-changing API routes
+  app.use("/api", csrfProtection);
 
   // Health check endpoint for monitoring/load balancers
   app.get("/health", async (_req, res) => {
@@ -53,8 +61,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // API Routes
   
-  // Contact form submission
-  app.post("/api/contact", async (req, res, next) => {
+  // Contact form submission (with rate limiting)
+  app.post("/api/contact", contactLimiter, async (req, res, next) => {
     try {
       const messageData = insertMessageSchema.parse(req.body);
       const message = await storage.createMessage(messageData);

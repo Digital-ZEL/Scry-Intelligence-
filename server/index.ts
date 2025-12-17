@@ -1,36 +1,38 @@
 import express, { type Request, Response, NextFunction } from "express";
+import cookieParser from "cookie-parser";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+import { setupVite, serveStatic } from "./vite";
+import { requestLogger, logger } from "./middleware/logger";
+import { apiLimiter } from "./middleware/rate-limit";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
-app.use((req, res, next) => {
-  const start = Date.now();
-  const path = req.path;
+// Structured request logging with request IDs
+app.use(requestLogger);
 
-  res.on("finish", () => {
-    const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      // Log only request metadata, NOT response bodies (PII protection)
-      const logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      log(logLine);
-    }
-  });
-
-  next();
-});
+// General API rate limiting
+app.use("/api", apiLimiter);
 
 (async () => {
   const server = await registerRoutes(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
-    // Log error without crashing the server
-    log(`Error ${status}: ${message}`, "error");
+    // Log error with request ID for tracing
+    logger.error({
+      timestamp: new Date().toISOString(),
+      requestId: req.requestId || "unknown",
+      method: req.method,
+      path: req.path,
+      statusCode: status,
+      duration: 0,
+    });
+    
     if (process.env.NODE_ENV !== "production") {
       console.error(err.stack);
     }
@@ -56,6 +58,6 @@ app.use((req, res, next) => {
     host: "0.0.0.0",
     reusePort: true,
   }, () => {
-    log(`serving on port ${port}`);
+    logger.log(`serving on port ${port}`);
   });
 })();

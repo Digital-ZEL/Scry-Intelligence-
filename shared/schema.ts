@@ -1,4 +1,4 @@
-import { pgTable, text, serial, timestamp, varchar, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, timestamp, varchar, boolean, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
@@ -30,7 +30,7 @@ export const researchAreas = pgTable("research_areas", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   isRestricted: boolean("is_restricted").default(false),
-  order: serial("order"),
+  order: integer("order").notNull().default(0),
 });
 
 // Define relations

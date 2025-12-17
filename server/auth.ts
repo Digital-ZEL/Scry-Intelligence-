@@ -7,6 +7,7 @@ import { promisify } from "util";
 import { storage } from "./storage";
 import { User as SelectUser, insertUserSchema } from "@shared/schema";
 import { ZodError } from "zod";
+import { authLimiter } from "./middleware/rate-limit";
 
 declare global {
   namespace Express {
@@ -78,7 +79,8 @@ export function setupAuth(app: Express) {
     }
   });
 
-  app.post("/api/register", async (req, res, next) => {
+  // Rate limit auth endpoints to prevent brute force attacks
+  app.post("/api/register", authLimiter, async (req, res, next) => {
     try {
       const existingUser = await storage.getUserByUsername(req.body.username);
       if (existingUser) {
@@ -109,7 +111,7 @@ export function setupAuth(app: Express) {
     }
   });
 
-  app.post("/api/login", (req, res, next) => {
+  app.post("/api/login", authLimiter, (req, res, next) => {
     passport.authenticate("local", (err: any, user: SelectUser | false, info: any) => {
       if (err) return next(err);
       if (!user) return res.status(401).json({ error: "Invalid username or password" });
