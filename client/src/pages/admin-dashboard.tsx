@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { 
   Tabs, 
   TabsContent, 
@@ -59,20 +60,31 @@ type ResearchAreaFormValues = z.infer<typeof researchAreaSchema>;
 export default function AdminDashboard() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("messages");
+  const [, navigate] = useLocation();
+  const deniedHeadingRef = useRef<HTMLHeadingElement>(null);
+  
+  // Focus management for accessibility when access is denied
+  useEffect(() => {
+    if (user?.role !== "admin" && deniedHeadingRef.current) {
+      deniedHeadingRef.current.focus();
+    }
+  }, [user?.role]);
   
   // Redirect to home if user is not admin (this is a fallback, API is also protected)
   if (user?.role !== "admin") {
     return (
-      <div className="container py-10">
+      <div className="container py-10" role="alert" aria-live="assertive">
         <Card>
           <CardHeader>
-            <CardTitle>Access Denied</CardTitle>
+            <CardTitle>
+              <h1 ref={deniedHeadingRef} tabIndex={-1}>Access Denied</h1>
+            </CardTitle>
             <CardDescription>
               You do not have permission to access the admin dashboard.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => window.location.href = "/"}>
+            <Button onClick={() => navigate("/")}>
               Return to Home
             </Button>
           </CardContent>

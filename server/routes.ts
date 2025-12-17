@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { setupAuth } from "./auth";
 import { insertMessageSchema, insertResearchAreaSchema } from "@shared/schema";
 import { ZodError } from "zod";
+import { pool } from "./db";
 
 // Middleware to check if user is authenticated
 const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
@@ -24,6 +25,31 @@ const isAdmin = (req: Request, res: Response, next: NextFunction) => {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
   setupAuth(app);
+
+  // Health check endpoint for monitoring/load balancers
+  app.get("/health", async (_req, res) => {
+    try {
+      // Check database connectivity
+      await pool.query("SELECT 1");
+      res.status(200).json({
+        status: "healthy",
+        timestamp: new Date().toISOString(),
+        services: {
+          database: "connected",
+          session: "connected"
+        }
+      });
+    } catch (error) {
+      res.status(503).json({
+        status: "unhealthy",
+        timestamp: new Date().toISOString(),
+        services: {
+          database: "disconnected",
+          session: "unknown"
+        }
+      });
+    }
+  });
 
   // API Routes
   
