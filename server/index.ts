@@ -4,8 +4,10 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic } from "./vite";
 import { requestLogger, logger } from "./middleware/logger";
 import { apiLimiter } from "./middleware/rate-limit";
+import { securityHeaders } from "./middleware/security";
 
 const app = express();
+app.use(securityHeaders);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -49,12 +51,10 @@ app.use("/api", apiLimiter);
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = 5000;
+  // Use the port provided by the environment (Railway) or default to 5000
+  const port = process.env.PORT || 5000;
   server.listen({
-    port,
+    port: Number(port),
     host: "0.0.0.0",
     reusePort: true,
   }, () => {

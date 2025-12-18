@@ -90,8 +90,18 @@ export function setupAuth(app: Express) {
       // Validate input and strip unauthorized fields (like role)
       const userData = insertUserSchema.parse(req.body);
 
+      // Check if admin invite code is provided and valid
+      let role = "user"; // Default role
+      const inviteCode = req.body.inviteCode;
+      const adminInviteCode = process.env.ADMIN_INVITE_CODE;
+      
+      if (inviteCode && adminInviteCode && inviteCode === adminInviteCode) {
+        role = "admin";
+      }
+
       const user = await storage.createUser({
         ...userData,
+        role,
         password: await hashPassword(userData.password),
       });
 

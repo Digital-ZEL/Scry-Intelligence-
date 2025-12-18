@@ -31,6 +31,7 @@ const registerSchema = z.object({
   email: z.string().email("Please enter a valid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string().min(6, "Password must be at least 6 characters"),
+  inviteCode: z.string().optional(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"],
@@ -184,7 +185,8 @@ function RegisterForm() {
       name: "",
       email: "",
       password: "",
-      confirmPassword: ""
+      confirmPassword: "",
+      inviteCode: ""
     }
   });
   
@@ -270,6 +272,20 @@ function RegisterForm() {
                 {form.formState.errors.confirmPassword.message}
               </p>
             )}
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="inviteCode" className="text-muted-foreground">
+              Admin Invite Code <span className="text-xs">(optional)</span>
+            </Label>
+            <Input
+              id="inviteCode"
+              type="text"
+              placeholder="Enter invite code for admin access"
+              {...form.register("inviteCode")}
+            />
+            <p className="text-xs text-muted-foreground">
+              Have an admin invite code? Enter it to get admin privileges.
+            </p>
           </div>
         </CardContent>
         <CardFooter>

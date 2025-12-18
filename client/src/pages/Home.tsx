@@ -1,10 +1,12 @@
-import { useState, ReactNode } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, ReactNode, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { 
   Lock, ArrowRight, Brain, Atom, Sparkles, 
   Users, Award, Mail, MessageSquare, 
-  Clock, Book, ChevronRight, GraduationCap 
+  Clock, Book, ChevronRight, GraduationCap,
+  Sun, Moon
 } from "lucide-react";
+import { useTheme } from "next-themes";
 import { Badge } from "@/components/ui/badge";
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
@@ -273,7 +275,43 @@ function ContactForm() {
 export default function Home() {
   const [secretClicks, setSecretClicks] = useState(0);
   const [showSecret, setShowSecret] = useState(false);
+  const [showQuantum, setShowQuantum] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [konamiIndex, setKonamiIndex] = useState(0);
+  const { theme, setTheme } = useTheme();
+  
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
+  
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
+  const konamiCode = [
+    "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", 
+    "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", 
+    "b", "a"
+  ];
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === konamiCode[konamiIndex]) {
+        if (konamiIndex === konamiCode.length - 1) {
+          setShowQuantum(true);
+          setKonamiIndex(0);
+        } else {
+          setKonamiIndex(konamiIndex + 1);
+        }
+      } else {
+        setKonamiIndex(0);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [konamiIndex]);
 
   const handleLogoClick = () => {
     const newCount = secretClicks + 1;
@@ -294,6 +332,9 @@ export default function Home() {
 
   return (
     <div className="bg-gradient-to-br from-[#0a0f24] via-[#111827] to-[#1a2238] text-white font-sans scroll-smooth">
+      {/* Noise Overlay */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-[100] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+      
       {/* Navigation */}
       <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/30 border-b border-slate-800">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
@@ -302,7 +343,7 @@ export default function Home() {
           </button>
           
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex gap-6 text-sm">
+          <nav className="hidden md:flex items-center gap-6 text-sm">
             {navItems.map((item) => (
               <a 
                 key={item.id} 
@@ -315,6 +356,14 @@ export default function Home() {
             <Link to="/auth" className="text-indigo-400 hover:text-indigo-300 transition-colors">
               Sign In
             </Link>
+            
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="p-2 rounded-full bg-slate-800/50 hover:bg-slate-700 text-slate-400 hover:text-white transition-all"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
           </nav>
           
           {/* Mobile Navigation Button */}
@@ -356,25 +405,31 @@ export default function Home() {
 
       {/* Hero */}
       <Section id="home">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center"
-        >
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight mb-6">
-            Revealing the <span className="text-indigo-400">Hidden Intelligence</span>
-          </h1>
-          <p className="max-w-2xl mx-auto text-lg text-slate-300 mb-10">
-            Peering beyond the veil of the known, we uncover the future through our mystic lens of advanced Artificial Intelligence.
-          </p>
-          <a
-            href="#about"
-            className="inline-block px-8 py-3 rounded-full bg-indigo-500 hover:bg-indigo-600 transition-colors shadow-lg shadow-indigo-500/30"
+        <div ref={heroRef} className="relative">
+          <motion.div
+            style={{ y: heroY, opacity: heroOpacity }}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center relative"
           >
-            Discover Our Mission
-          </a>
-        </motion.div>
+            {/* Radial Spotlight */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px] -z-10"></div>
+            
+            <h1 className="text-4xl sm:text-7xl font-bold font-heading tracking-tight mb-6">
+              Revealing the <span className="text-indigo-400">Hidden Intelligence</span>
+            </h1>
+            <p className="max-w-2xl mx-auto text-lg text-slate-300 mb-10">
+              Peering beyond the veil of the known, we uncover the future through our mystic lens of advanced Artificial Intelligence.
+            </p>
+            <a
+              href="#about"
+              className="inline-block px-8 py-3 rounded-full bg-indigo-500 hover:bg-indigo-600 transition-colors shadow-lg shadow-indigo-500/30 font-medium"
+            >
+              Discover Our Mission
+            </a>
+          </motion.div>
+        </div>
       </Section>
 
       {/* About */}
@@ -387,7 +442,7 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="order-2 md:order-1"
           >
-            <h2 className="text-3xl font-bold mb-6">About Us</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold font-heading tracking-tight mb-6">About Us</h2>
             <p className="text-slate-300 leading-relaxed mb-4">
               At Scry Intelligence, we see what others cannot. Like mystical scryers gazing into their crystal spheres, our elite team of scientists and engineers, led by founding engineer <span className="text-indigo-400 font-medium">Denzel Thomas</span>, peer beyond the veil of conventional AI, revealing hidden patterns and insights that remain invisible to others, all while maintaining the highest standards of confidentiality.
             </p>
@@ -528,7 +583,7 @@ export default function Home() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl font-bold mb-4">Research Areas</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold font-heading tracking-tight mb-4">Research Areas</h2>
           <p className="text-slate-300 max-w-2xl mx-auto">
             Our mystical vision penetrates the depths of artificial intelligence, uncovering hidden connections between seemingly disparate domains. Like seers of the digital age, we divine insights from the data void.
           </p>
@@ -603,7 +658,7 @@ export default function Home() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl font-bold mb-4">Elevate Your Craft</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold font-heading tracking-tight mb-4">Elevate Your Craft</h2>
           <p className="text-slate-300 max-w-2xl mx-auto">
             Unveil the arcane knowledge of AI through our elite master classes. Like initiates in a secret order, you'll be guided by our visionary scryers to see beyond the ordinary and perceive the obscured truths of advanced intelligence.
           </p>
@@ -651,7 +706,7 @@ export default function Home() {
             viewport={{ once: true }} 
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl font-bold mb-4">Join Our Team</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold font-heading tracking-tight mb-4">Join Our Team</h2>
             <p className="text-slate-300 mb-6">
               Join our circle of visionaries who can perceive what lies beyond the ordinary. At Scry Intelligence, we seek those with the rare gift to divine hidden patterns and forge new paths through the mists of uncertainty. We value the courage to gaze into the unknown and the wisdom to interpret what others cannot see.
             </p>
@@ -816,7 +871,7 @@ export default function Home() {
           transition={{ duration: 0.6 }}
           className="max-w-3xl mx-auto"
         >
-          <h2 className="text-3xl font-bold mb-4 text-center">Get In Touch</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold font-heading tracking-tight mb-4 text-center">Get In Touch</h2>
           <p className="text-slate-300 mb-8 text-center">
             Reach beyond the veil and establish a connection with our mystic circle. Share your questions about our divinations or propose a joining of oracles.
           </p>
@@ -825,35 +880,35 @@ export default function Home() {
       </Section>
 
       {/* Footer */}
-      <footer className="py-10 bg-black/30 backdrop-blur-sm border-t border-slate-800 mt-16">
-        <div className="container mx-auto">
+      <footer className="py-10 bg-black/30 backdrop-blur-sm border-t border-slate-800 mt-16 relative">
+        <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
-            <div>
-              <h4 className="font-semibold mb-4 text-white">About</h4>
+            <div className="col-span-1">
+              <h4 className="font-semibold font-heading mb-4 text-white">About</h4>
               <ul className="space-y-2">
                 <li><a href="#about" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Our Mission</a></li>
                 <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Team</a></li>
                 <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Partners</a></li>
               </ul>
             </div>
-            <div>
-              <h4 className="font-semibold mb-4 text-white">Research</h4>
+            <div className="col-span-1">
+              <h4 className="font-semibold font-heading mb-4 text-white">Research</h4>
               <ul className="space-y-2">
                 <li><a href="#research" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Areas</a></li>
                 <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Publications</a></li>
                 <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Open Source</a></li>
               </ul>
             </div>
-            <div>
-              <h4 className="font-semibold mb-4 text-white">Careers</h4>
+            <div className="col-span-1">
+              <h4 className="font-semibold font-heading mb-4 text-white">Courses</h4>
               <ul className="space-y-2">
-                <li><a href="#careers" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Open Positions</a></li>
-                <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Benefits</a></li>
-                <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Life at Scry Intelligence</a></li>
+                <li><a href="#courses" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Master Classes</a></li>
+                <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Enrollment</a></li>
+                <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Certifications</a></li>
               </ul>
             </div>
-            <div>
-              <h4 className="font-semibold mb-4 text-white">Connect</h4>
+            <div className="col-span-1">
+              <h4 className="font-semibold font-heading mb-4 text-white">Connect</h4>
               <ul className="space-y-2">
                 <li><a href="#contact" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Contact Us</a></li>
                 <li><a href="#" className="text-sm text-slate-400 hover:text-indigo-400 transition-colors">Newsletter</a></li>
@@ -866,7 +921,7 @@ export default function Home() {
             <div className="text-sm text-slate-500 mb-4 md:mb-0">
               © {new Date().getFullYear()} Scry Intelligence. All rights reserved.
             </div>
-            <div className="flex gap-6">
+            <div className="flex items-center gap-6">
               <Link to="/admin" className="text-sm text-slate-500 hover:text-indigo-400 transition-colors">
                 Admin
               </Link>
@@ -876,6 +931,13 @@ export default function Home() {
               <a href="#" className="text-sm text-slate-500 hover:text-indigo-400 transition-colors">
                 Terms
               </a>
+              <button 
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="ml-4 p-2 rounded-full bg-slate-800/50 hover:bg-slate-700 text-slate-400 hover:text-white transition-all"
+                aria-label="Back to top"
+              >
+                <ChevronRight className="h-4 w-4 -rotate-90" />
+              </button>
             </div>
           </div>
         </div>
@@ -894,6 +956,54 @@ export default function Home() {
           </p>
         </motion.div>
       )}
+
+      {/* Quantum Curriculum Easter Egg */}
+      <AnimatePresence>
+        {showQuantum && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, rotateX: 45 }}
+            animate={{ opacity: 1, scale: 1, rotateX: 0 }}
+            exit={{ opacity: 0, scale: 0.8, rotateX: -45 }}
+            className="fixed inset-0 bg-indigo-950/95 flex items-center justify-center z-[110] p-6 backdrop-blur-xl"
+            onClick={() => setShowQuantum(false)}
+          >
+            <div className="max-w-2xl bg-slate-900 border border-indigo-500/50 p-8 rounded-3xl shadow-[0_0_50px_rgba(99,102,241,0.3)] relative overflow-hidden">
+              <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:20px_20px]"></div>
+              <div className="relative">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-3 bg-indigo-500/20 rounded-xl">
+                    <Atom className="h-8 w-8 text-indigo-400 animate-pulse" />
+                  </div>
+                  <h2 className="text-3xl font-bold font-heading text-white">Quantum Curriculum Unlocked</h2>
+                </div>
+                
+                <p className="text-indigo-300 mb-6 font-medium">
+                  You have accessed the restricted Scry Intelligence learning pathways.
+                </p>
+                
+                <div className="space-y-4 mb-8">
+                  <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700">
+                    <h3 className="text-indigo-400 font-semibold mb-1">QC-101: Temporal ML Architectures</h3>
+                    <p className="text-sm text-slate-400">Predicting states before they materialize in the data stream.</p>
+                  </div>
+                  <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700">
+                    <h3 className="text-indigo-400 font-semibold mb-1">QC-204: Non-Euclidean Embedding Spaces</h3>
+                    <p className="text-sm text-slate-400">Mapping intelligence across dimensions invisible to 3D observers.</p>
+                  </div>
+                  <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700">
+                    <h3 className="text-indigo-400 font-semibold mb-1">QC-509: Synthetic Consciousness Alignment</h3>
+                    <p className="text-sm text-slate-400">[REDACTED] — Access requires Phase 4 clearance.</p>
+                  </div>
+                </div>
+                
+                <p className="text-xs text-slate-500 italic text-center">
+                  Click anywhere to return to the surface.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
