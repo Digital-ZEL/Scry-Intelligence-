@@ -5,6 +5,7 @@ declare global {
   namespace Express {
     interface Request {
       requestId?: string;
+      requestStartTime?: number;
     }
   }
 }
@@ -19,6 +20,7 @@ export interface LogEntry {
   userAgent?: string;
   ip?: string;
   userId?: number;
+  errorMessage?: string;
   level: "info" | "warn" | "error";
 }
 
@@ -65,6 +67,9 @@ export const logger = new StructuredLogger();
  */
 export function requestLogger(req: Request, res: Response, next: NextFunction) {
   const start = Date.now();
+
+  // Preserve start time for downstream error logging
+  req.requestStartTime = start;
   
   // Generate unique request ID
   req.requestId = randomBytes(8).toString("hex");
@@ -81,7 +86,7 @@ export function requestLogger(req: Request, res: Response, next: NextFunction) {
         timestamp: new Date().toISOString(),
         requestId: req.requestId!,
         method: req.method,
-        path: req.path,
+        path: req.originalUrl || req.path,
         statusCode: res.statusCode,
         duration,
         userAgent: req.headers["user-agent"]?.substring(0, 100), // Truncate UA
