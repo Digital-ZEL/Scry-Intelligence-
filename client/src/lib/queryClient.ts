@@ -8,7 +8,7 @@ async function throwIfResNotOk(res: Response) {
 }
 
 // CSRF token management
-let csrfToken: string | null = null;
+let csrfToken: string | undefined;
 
 async function getCsrfToken(): Promise<string> {
   if (csrfToken) return csrfToken;
@@ -18,18 +18,23 @@ async function getCsrfToken(): Promise<string> {
     .split("; ")
     .find((row) => row.startsWith("csrf-token="))
     ?.split("=")[1];
-  
+
   if (cookieToken) {
     csrfToken = cookieToken;
-    return csrfToken;
+    return cookieToken;
   }
   
   // Fetch from server if not in cookie
   const res = await fetch("/api/csrf-token", { credentials: "include" });
   if (res.ok) {
     const data = await res.json();
+
+    if (typeof data?.csrfToken !== "string") {
+      throw new Error("Invalid CSRF token response");
+    }
+
     csrfToken = data.csrfToken;
-    return csrfToken;
+    return data.csrfToken;
   }
   
   throw new Error("Failed to get CSRF token");

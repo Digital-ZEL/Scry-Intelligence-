@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import express from "express";
 import session from "express-session";
-import cookieParser from "cookie-parser";
+import cookieParser from "../middleware/cookie-parser";
 import request from "supertest";
 
 // Create a minimal test app

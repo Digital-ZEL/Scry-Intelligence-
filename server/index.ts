@@ -1,5 +1,5 @@
 import express, { type Request, Response, NextFunction } from "express";
-import cookieParser from "cookie-parser";
+import cookieParser from "./middleware/cookie-parser";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic } from "./vite";
 import { requestLogger, logger } from "./middleware/logger";
