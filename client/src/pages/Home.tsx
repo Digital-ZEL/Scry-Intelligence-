@@ -29,6 +29,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import logoImage from "@assets/logo.png";
+import heroBg from "@assets/hero-bg.png";
 
 const navItems = [
   { id: "home", label: "Home" },
@@ -413,6 +414,19 @@ export default function Home() {
 
       {/* Hero */}
       <Section id="home">
+        {/* Hero Background Image */}
+        <div 
+          className="absolute inset-0 -z-20 opacity-60"
+          style={{
+            backgroundImage: `url(${heroBg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center bottom',
+            backgroundRepeat: 'no-repeat',
+          }}
+        />
+        {/* Gradient Overlay to blend with site theme */}
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#0a0f24] via-[#0a0f24]/80 to-transparent" />
+        
         <div ref={heroRef} className="relative">
           <motion.div
             style={{ y: heroY, opacity: heroOpacity }}
