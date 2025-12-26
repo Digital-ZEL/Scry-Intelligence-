@@ -416,21 +416,20 @@ export default function Home() {
       <Section id="home" fullWidth>
         {/* Hero Background Image */}
         <div 
-          className="absolute inset-0"
+          className="absolute inset-0 -z-10"
           style={{
             backgroundImage: `url(${heroBg})`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center bottom',
+            backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            zIndex: -1,
+            filter: 'brightness(1.15)',
           }}
         />
-        {/* Gradient Overlay - lighter at bottom to show neural nodes */}
+        {/* Gradient Overlay - lighter to keep the nodes visible */}
         <div 
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 pointer-events-none -z-[5]"
           style={{
-            background: 'linear-gradient(to bottom, rgba(10,15,36,0.7) 0%, rgba(10,15,36,0.4) 60%, rgba(10,15,36,0.2) 100%)',
-            zIndex: 0,
+            background: 'linear-gradient(to bottom, rgba(10,15,36,0.45) 0%, rgba(10,15,36,0.25) 50%, rgba(10,15,36,0.15) 100%)',
           }}
         />
         
