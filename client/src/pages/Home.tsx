@@ -415,21 +415,22 @@ export default function Home() {
       {/* Hero */}
       <Section id="home" fullWidth>
         {/* Hero Background Image */}
-        <div 
-          className="absolute inset-0 -z-10"
+        <div
+          className="absolute inset-0 z-0"
           style={{
             backgroundImage: `url(${heroBg})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            filter: 'brightness(1.15)',
+            backgroundSize: "cover",
+            backgroundPosition: "center bottom",
+            backgroundRepeat: "no-repeat",
+            filter: "brightness(1.1) contrast(1.05)",
           }}
         />
-        {/* Gradient Overlay - lighter to keep the nodes visible */}
-        <div 
-          className="absolute inset-0 pointer-events-none -z-[5]"
+        {/* Blend overlay so text stays readable but image remains visible */}
+        <div
+          className="absolute inset-0 pointer-events-none z-[1]"
           style={{
-            background: 'linear-gradient(to bottom, rgba(10,15,36,0.45) 0%, rgba(10,15,36,0.25) 50%, rgba(10,15,36,0.15) 100%)',
+            background:
+              "radial-gradient(circle at 50% 45%, rgba(0,0,0,0.15) 0%, rgba(10,15,36,0.35) 55%, rgba(10,15,36,0.55) 100%)",
           }}
         />
         
