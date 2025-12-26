@@ -4,13 +4,15 @@ interface SectionProps {
   id: string;
   children: ReactNode;
   fullWidth?: boolean;
+  background?: ReactNode;
 }
 
-export const Section = ({ id, children, fullWidth }: SectionProps) => (
+export const Section = ({ id, children, fullWidth, background }: SectionProps) => (
   <section
     id={id}
     className="min-h-screen flex items-center justify-center px-6 py-24 sm:py-32 relative overflow-hidden isolate"
   >
+    {background}
     <div
       className={`w-full text-slate-200 relative z-10 ${
         fullWidth ? "" : "max-w-5xl"

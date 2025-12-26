@@ -413,26 +413,33 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <Section id="home" fullWidth>
-        {/* Hero Background Image */}
-        <div
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: `url(${heroBg})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center bottom",
-            backgroundRepeat: "no-repeat",
-            filter: "brightness(1.1) contrast(1.05)",
-          }}
-        />
-        {/* Blend overlay so text stays readable but image remains visible */}
-        <div
-          className="absolute inset-0 pointer-events-none z-[1]"
-          style={{
-            background:
-              "radial-gradient(circle at 50% 45%, rgba(0,0,0,0.15) 0%, rgba(10,15,36,0.35) 55%, rgba(10,15,36,0.55) 100%)",
-          }}
-        />
+      <Section
+        id="home"
+        fullWidth
+        background={
+          <>
+            {/* Hero Background Image (fills the entire section) */}
+            <div
+              className="absolute inset-0 z-0"
+              style={{
+                backgroundImage: `url(${heroBg})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center bottom",
+                backgroundRepeat: "no-repeat",
+                filter: "brightness(1.1) contrast(1.05)",
+              }}
+            />
+            {/* Blend overlay so text stays readable but image remains visible */}
+            <div
+              className="absolute inset-0 pointer-events-none z-[1]"
+              style={{
+                background:
+                  "radial-gradient(circle at 50% 45%, rgba(0,0,0,0.15) 0%, rgba(10,15,36,0.35) 55%, rgba(10,15,36,0.55) 100%)",
+              }}
+            />
+          </>
+        }
+      >
         
         <div ref={heroRef} className="relative">
           <motion.div
