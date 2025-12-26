@@ -336,8 +336,17 @@ export default function Home() {
       {/* Navigation */}
       <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/30 border-b border-slate-800">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-          <button onClick={handleLogoClick} aria-label="AI Lab logo" className="text-xl font-semibold tracking-wider">
-            <span className="text-indigo-400">Scry</span> Intelligence
+          <button onClick={handleLogoClick} aria-label="AI Lab logo" className="flex items-center gap-3 group">
+            <div className="relative">
+              <img 
+                src="/logo.png" 
+                alt="Scry Intelligence Logo" 
+                className="h-10 w-auto filter drop-shadow-[0_0_8px_rgba(99,102,241,0.5)] transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_12px_rgba(99,102,241,0.8)]" 
+              />
+            </div>
+            <span className="text-xl font-semibold tracking-wider hidden sm:block">
+              <span className="text-indigo-400">Scry</span> Intelligence
+            </span>
           </button>
           
           {/* Desktop Navigation */}
@@ -881,6 +890,21 @@ export default function Home() {
       <footer className="py-10 bg-black/30 backdrop-blur-sm border-t border-slate-800 mt-16 relative">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+            <div className="col-span-2 md:col-span-1 mb-4 md:mb-0">
+              <div className="flex items-center gap-3 mb-6">
+                <img 
+                  src="/logo.png" 
+                  alt="Scry Intelligence Logo" 
+                  className="h-8 w-auto filter drop-shadow-[0_0_5px_rgba(99,102,241,0.4)] opacity-80" 
+                />
+                <span className="font-semibold font-heading text-lg tracking-wider">
+                  <span className="text-indigo-400">Scry</span> Intelligence
+                </span>
+              </div>
+              <p className="text-sm text-slate-500 max-w-xs">
+                Peering beyond the veil of the known to uncover the future through advanced AI.
+              </p>
+            </div>
             <div className="col-span-1">
               <h4 className="font-semibold font-heading mb-4 text-white">About</h4>
               <ul className="space-y-2">
