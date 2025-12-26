@@ -1,8 +1,8 @@
 import { useState, ReactNode, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { 
-  Lock, ArrowRight, Brain, Atom, Sparkles, 
-  Users, Award, Mail, MessageSquare, 
+import {
+  Lock, ArrowRight, Brain, Atom, Sparkles,
+  Users, Award, MessageSquare,
   Clock, Book, ChevronRight, GraduationCap,
   Sun, Moon
 } from "lucide-react";
@@ -14,8 +14,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Link, useLocation } from "wouter";
-import { useAuth } from "@/hooks/use-auth";
+import { Link } from "wouter";
 import Section from "@/components/Section";
 import { 
   Form, 
@@ -29,7 +28,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 const navItems = [
   { id: "home", label: "Home" },

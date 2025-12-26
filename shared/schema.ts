@@ -1,4 +1,4 @@
-import { pgTable, text, serial, timestamp, varchar, boolean, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, timestamp, boolean, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
@@ -12,6 +12,13 @@ export const users = pgTable("users", {
   email: text("email"),
   role: text("role").default("user"),
   createdAt: timestamp("created_at").defaultNow(),
+  // Password reset fields
+  resetToken: text("reset_token"),
+  resetTokenExpiry: timestamp("reset_token_expiry"),
+  // 2FA fields
+  twoFactorSecret: text("two_factor_secret"),
+  twoFactorEnabled: boolean("two_factor_enabled").default(false),
+  twoFactorBackupCodes: text("two_factor_backup_codes"), // JSON array of hashed backup codes
 });
 
 // Contact messages table

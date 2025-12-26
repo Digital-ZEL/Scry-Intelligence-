@@ -5,6 +5,10 @@ import { setupVite, serveStatic } from "./vite";
 import { requestLogger, logger } from "./middleware/logger";
 import { apiLimiter } from "./middleware/rate-limit";
 import { securityHeaders } from "./middleware/security";
+import { initSentry, Sentry } from "./sentry";
+
+// Initialize Sentry for error tracking (must be first)
+initSentry();
 
 const app = express();
 app.use(securityHeaders);
@@ -21,7 +25,7 @@ app.use("/api", apiLimiter);
 (async () => {
   const server = await registerRoutes(app);
 
-  app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
+  app.use((err: Error & { status?: number; statusCode?: number }, req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
@@ -34,7 +38,18 @@ app.use("/api", apiLimiter);
       statusCode: status,
       duration: 0,
     });
-    
+
+    // Report to Sentry for 5xx errors
+    if (status >= 500) {
+      Sentry.captureException(err, {
+        tags: {
+          requestId: req.requestId || "unknown",
+          path: req.path,
+          method: req.method,
+        },
+      });
+    }
+
     if (process.env.NODE_ENV !== "production") {
       console.error(err.stack);
     }

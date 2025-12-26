@@ -10,7 +10,9 @@ import { ZodError } from "zod";
 import { authLimiter } from "./middleware/rate-limit";
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     interface User extends SelectUser {}
   }
 }
@@ -107,7 +109,7 @@ export function setupAuth(app: Express) {
 
       req.login(user, (err) => {
         if (err) return next(err);
-        const { password, ...userWithoutPassword } = user;
+        const { password: _password, ...userWithoutPassword } = user;
         res.status(201).json(userWithoutPassword);
       });
     } catch (err) {
@@ -122,13 +124,13 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", authLimiter, (req, res, next) => {
-    passport.authenticate("local", (err: any, user: SelectUser | false, info: any) => {
+    passport.authenticate("local", (err: Error | null, user: SelectUser | false, _info: unknown) => {
       if (err) return next(err);
       if (!user) return res.status(401).json({ error: "Invalid username or password" });
 
-      req.login(user, (err: any) => {
-        if (err) return next(err);
-        const { password, ...userWithoutPassword } = user;
+      req.login(user, (loginErr: Error | null) => {
+        if (loginErr) return next(loginErr);
+        const { password: _password, ...userWithoutPassword } = user;
         res.status(200).json(userWithoutPassword);
       });
     })(req, res, next);
@@ -143,7 +145,7 @@ export function setupAuth(app: Express) {
 
   app.get("/api/user", (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ error: "Not authenticated" });
-    const { password, ...userWithoutPassword } = req.user as SelectUser;
+    const { password: _password, ...userWithoutPassword } = req.user as SelectUser;
     res.json(userWithoutPassword);
   });
 }

@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { randomBytes } from "crypto";
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
       csrfToken?: () => string;
