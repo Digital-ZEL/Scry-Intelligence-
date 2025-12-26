@@ -416,16 +416,23 @@ export default function Home() {
       <Section id="home">
         {/* Hero Background Image */}
         <div 
-          className="absolute inset-0 -z-20 opacity-60"
+          className="absolute inset-0"
           style={{
             backgroundImage: `url(${heroBg})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center bottom',
             backgroundRepeat: 'no-repeat',
+            zIndex: -1,
           }}
         />
-        {/* Gradient Overlay to blend with site theme */}
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#0a0f24] via-[#0a0f24]/80 to-transparent" />
+        {/* Gradient Overlay - lighter at bottom to show neural nodes */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(10,15,36,0.7) 0%, rgba(10,15,36,0.4) 60%, rgba(10,15,36,0.2) 100%)',
+            zIndex: 0,
+          }}
+        />
         
         <div ref={heroRef} className="relative">
           <motion.div
