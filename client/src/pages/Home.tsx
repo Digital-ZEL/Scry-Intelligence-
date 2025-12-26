@@ -413,7 +413,7 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <Section id="home">
+      <Section id="home" fullWidth>
         {/* Hero Background Image */}
         <div 
           className="absolute inset-0"
