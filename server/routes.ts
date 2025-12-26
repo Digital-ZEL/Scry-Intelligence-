@@ -7,9 +7,10 @@ import { ZodError } from "zod";
 import { pool } from "./db";
 import { csrfProtection, csrfTokenEndpoint } from "./middleware/csrf";
 import { contactLimiter } from "./middleware/rate-limit";
+import authExtendedRoutes from "./routes/auth-extended";
 
 // Middleware to check if user is authenticated
-const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
+const _isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
   if (req.isAuthenticated()) {
     return next();
   }
@@ -34,6 +35,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Apply CSRF protection to all state-changing API routes
   app.use("/api", csrfProtection);
 
+  // Extended auth routes (password reset, 2FA)
+  app.use(authExtendedRoutes);
+
   // Health check endpoint for monitoring/load balancers
   app.get("/health", async (_req, res) => {
     try {
@@ -47,7 +51,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           session: "connected"
         }
       });
-    } catch (error) {
+    } catch {
       res.status(503).json({
         status: "unhealthy",
         timestamp: new Date().toISOString(),
@@ -65,7 +69,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/contact", contactLimiter, async (req, res, next) => {
     try {
       const messageData = insertMessageSchema.parse(req.body);
-      const message = await storage.createMessage(messageData);
+      await storage.createMessage(messageData);
       res.status(201).json({ success: true, message: "Message sent successfully" });
     } catch (error) {
       if (error instanceof ZodError) {

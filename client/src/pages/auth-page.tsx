@@ -42,8 +42,8 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function AuthPage() {
   const [tab, setTab] = useState<string>("login");
-  const [location, navigate] = useLocation();
-  const { user, loginMutation, registerMutation } = useAuth();
+  const [, navigate] = useLocation();
+  const { user } = useAuth();
   
   // Check if already logged in
   if (user) {
@@ -191,7 +191,7 @@ function RegisterForm() {
   });
   
   const onSubmit = (data: RegisterFormValues) => {
-    const { confirmPassword, ...userData } = data;
+    const { confirmPassword: _, ...userData } = data;
     registerMutation.mutate(userData);
   };
 

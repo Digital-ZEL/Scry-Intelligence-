@@ -1,5 +1,5 @@
 import rateLimit from "express-rate-limit";
-import type { Request, Response } from "express";
+import type { Request } from "express";
 
 /**
  * Rate limiter for authentication endpoints.
@@ -20,7 +20,7 @@ export const authLimiter = rateLimit({
     const username = req.body?.username || "";
     return `${req.ip}-${username}`;
   },
-  skip: (req: Request) => {
+  skip: (_req: Request) => {
     // Skip rate limiting in test environment
     return process.env.NODE_ENV === "test";
   },
@@ -40,7 +40,7 @@ export const contactLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req: Request) => {
+  skip: (_req: Request) => {
     return process.env.NODE_ENV === "test";
   },
 });

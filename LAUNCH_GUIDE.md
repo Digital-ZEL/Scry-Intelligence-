@@ -19,6 +19,14 @@ SESSION_SECRET=your-super-secret-random-string-change-this
 
 # Optional
 NODE_ENV=development
+ADMIN_INVITE_CODE=your-admin-invite-code  # For creating admin users during registration
+
+# Error Tracking (Sentry)
+SENTRY_DSN=your-sentry-dsn              # Server-side error tracking
+VITE_SENTRY_DSN=your-sentry-dsn         # Client-side error tracking
+
+# Password Reset (configure email provider)
+APP_URL=https://your-domain.com         # Used for password reset links
 ```
 
 **Important:** Generate a secure `SESSION_SECRET`:
@@ -50,18 +58,23 @@ The app will be available at `http://localhost:5000`
    - ✅ Secure session cookies (httpOnly, sameSite)
    - ✅ Input validation on all endpoints
    - ✅ No PII in logs
+   - ✅ Password reset flow with secure tokens
+   - ✅ Two-factor authentication (TOTP) for admin accounts
+   - ✅ Backup codes for 2FA recovery
 
 2. **Reliability (Good)**
    - ✅ Health check endpoint for monitoring
    - ✅ Error handling won't crash server
    - ✅ Structured logging with request tracing
    - ✅ Database connection pooling
+   - ✅ Sentry integration for error tracking (optional)
 
 3. **Code Quality (Excellent)**
    - ✅ Automated tests (auth, contact, admin, health)
    - ✅ CI pipeline (type check, lint, test)
    - ✅ TypeScript throughout
    - ✅ Shared schema validation
+   - ✅ Code splitting for optimized bundle sizes
 
 ---
 

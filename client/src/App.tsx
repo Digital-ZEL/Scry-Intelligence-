@@ -6,20 +6,34 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
 import { ThemeProvider } from "next-themes";
+import { Suspense, lazy } from "react";
+import { Loader2 } from "lucide-react";
 
-import Home from "@/pages/Home";
-import AuthPage from "@/pages/auth-page";
-import AdminDashboard from "@/pages/admin-dashboard";
-import NotFound from "@/pages/not-found";
+// Lazy load pages for code splitting
+const Home = lazy(() => import("@/pages/Home"));
+const AuthPage = lazy(() => import("@/pages/auth-page"));
+const AdminDashboard = lazy(() => import("@/pages/admin-dashboard"));
+const NotFound = lazy(() => import("@/pages/not-found"));
+
+// Loading fallback component
+function PageLoader() {
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#0a0f24] via-[#111827] to-[#1a2238]">
+      <Loader2 className="h-8 w-8 animate-spin text-indigo-500" />
+    </div>
+  );
+}
 
 function Router() {
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <ProtectedRoute path="/admin" component={AdminDashboard} />
-      <Route path="/auth" component={AuthPage} />
-      <Route component={NotFound} />
-    </Switch>
+    <Suspense fallback={<PageLoader />}>
+      <Switch>
+        <Route path="/" component={Home} />
+        <ProtectedRoute path="/admin" component={AdminDashboard} />
+        <Route path="/auth" component={AuthPage} />
+        <Route component={NotFound} />
+      </Switch>
+    </Suspense>
   );
 }
 

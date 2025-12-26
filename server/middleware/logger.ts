@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { randomBytes } from "crypto";
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
       requestId?: string;
@@ -86,7 +87,7 @@ export function requestLogger(req: Request, res: Response, next: NextFunction) {
         duration,
         userAgent: req.headers["user-agent"]?.substring(0, 100), // Truncate UA
         ip: (req.ip || req.socket.remoteAddress || "unknown").replace(/^::ffff:/, ""), // Clean IPv4-mapped IPv6
-        userId: (req.user as any)?.id,
+        userId: (req.user as { id?: number } | undefined)?.id,
       };
 
       // Choose log level based on status code

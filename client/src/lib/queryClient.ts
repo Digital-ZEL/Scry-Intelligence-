@@ -29,9 +29,9 @@ async function getCsrfToken(): Promise<string> {
   if (res.ok) {
     const data = await res.json();
     csrfToken = data.csrfToken;
-    return csrfToken;
+    return data.csrfToken as string;
   }
-  
+
   throw new Error("Failed to get CSRF token");
 }
 
