@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import logoImage from "@assets/logo.png";
 
 const navItems = [
   { id: "home", label: "Home" },
@@ -339,7 +340,7 @@ export default function Home() {
           <button onClick={handleLogoClick} aria-label="AI Lab logo" className="flex items-center gap-3 group">
             <div className="relative">
               <img 
-                src="/logo.png" 
+                src={logoImage} 
                 alt="Scry Intelligence Logo" 
                 className="h-10 w-auto filter drop-shadow-[0_0_8px_rgba(99,102,241,0.5)] transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_12px_rgba(99,102,241,0.8)]" 
               />
@@ -893,7 +894,7 @@ export default function Home() {
             <div className="col-span-2 md:col-span-1 mb-4 md:mb-0">
               <div className="flex items-center gap-3 mb-6">
                 <img 
-                  src="/logo.png" 
+                  src={logoImage} 
                   alt="Scry Intelligence Logo" 
                   className="h-8 w-auto filter drop-shadow-[0_0_5px_rgba(99,102,241,0.4)] opacity-80" 
                 />
