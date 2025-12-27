@@ -416,12 +416,17 @@ export default function Home() {
       <Section
         id="home" noPadding
         fullWidth
+        noPadding
         background={
           <>
             {/* Hero Background Image (fills the entire section) */}
             <div
-              className="absolute inset-0 z-0"
               style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
                 backgroundImage: `url(${heroBg})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center bottom",
@@ -431,10 +436,14 @@ export default function Home() {
             />
             {/* Blend overlay so text stays readable but image remains visible */}
             <div
-              className="absolute inset-0 pointer-events-none z-[1]"
               style={{
-                background:
-                  "radial-gradient(circle at 50% 45%, rgba(0,0,0,0.15) 0%, rgba(10,15,36,0.35) 55%, rgba(10,15,36,0.55) 100%)",
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: "radial-gradient(circle at 50% 45%, rgba(0,0,0,0.15) 0%, rgba(10,15,36,0.35) 55%, rgba(10,15,36,0.55) 100%)",
+                pointerEvents: 'none',
               }}
             />
           </>
